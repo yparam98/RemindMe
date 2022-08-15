@@ -32,15 +32,15 @@ public class TaskListView extends Fragment {
     public TaskListView(String uid) {
         this.uid = uid;
         TaskList taskList = new TaskList(uid);
-        DatabaseHelper databaseHelper = new DatabaseHelper();
-        databaseHelper.getTaskList(uid, new TaskListCallback() {
-            @Override
-            public void getTaskList(boolean isValid, TaskList taskList) {
-                if (isValid) {
-                    TaskListAdapter taskListAdapter = new TaskListAdapter(taskList);
-                }
-            }
-        });
+//        DatabaseHelper databaseHelper = new DatabaseHelper();
+//        databaseHelper.getTaskList(uid, new TaskListCallback() {
+//            @Override
+//            public void getTaskList(boolean isValid, TaskList taskList) {
+//                if (isValid) {
+//                    TaskListAdapter taskListAdapter = new TaskListAdapter(taskList);
+//                }
+//            }
+//        });
     }
 
     @Override

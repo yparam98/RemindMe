@@ -46,12 +46,12 @@
             android:textSize="16sp"  />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/task_due_date_picker"
+            android:id="@+id/task_due_date_picker_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_baseline_edit_calendar_24"
             android:drawablePadding="5dp"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

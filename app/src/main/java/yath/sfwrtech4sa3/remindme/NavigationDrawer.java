@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
@@ -62,27 +63,33 @@ public class NavigationDrawer extends Fragment {
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                Fragment fragment = null;
+                Fragment fragment = null;
 
                 switch (item.getItemId()) {
                     case R.id.view_tasks_menu_item:
                         Log.d("yathavan", "view tasks");
-                        return false;
+                        fragment = new TaskListView();
+                        break;
                     case R.id.add_task_menu_item:
-                        Log.d("yathavan", "add tasks");
-                        return false;
+                        fragment = new TaskBuilder();
+                        break;
                     case R.id.view_ally_menu_item:
-                        Log.d("yathavan", "view allies");
-                        return false;
+                        fragment = new ViewAllies();
+                        break;
                     case R.id.add_ally_menu_item:
-                        Log.d("yathavan", "add ally");
-                        return false;
+                        fragment = new AddAlly();
+                        break;
                     case R.id.remind_ally_menu_item:
-                        Log.d("yathavan", "remind ally");
-                        return false;
+                        fragment = new TaskListView();
+                        break;
                     default:
-                        NavigationDrawer.super.onOptionsItemSelected(item);
+                        fragment = new TaskListView();
                 }
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Log.d("yathavan", fragmentManager.getFragments().toString());
+                fragmentManager.beginTransaction().replace(R.id.homescreen_transaction_frame, fragment).commit();
+
                 return false;
             }
         });

@@ -1,5 +1,6 @@
 package yath.sfwrtech4sa3.remindme;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,8 +10,9 @@ public class TaskList {
     public List<Task> tasks;
 
     public TaskList(String incoming_userID) {
-        this.taskListID = UUID.randomUUID().toString();
+        this.taskListID = "t-"+incoming_userID;
         this.userID = incoming_userID;
+        this.tasks = new ArrayList<Task>();
     }
 
     public void addTask(Task incoming_task) {

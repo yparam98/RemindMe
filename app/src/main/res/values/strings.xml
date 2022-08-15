@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">RemindMe</string>
+    <string name="yath_web_client_id">42977187359-g6cbcnol8i67k1ebc5k5kfjs1sc9l22l.apps.googleusercontent.com</string>
+    <string name="remind_me_client_id">42977187359-ebclqqps7rar1h866tj9c1ut4teu68v1.apps.googleusercontent.com</string>
+    <string name="web_client_id">42977187359-g6cbcnol8i67k1ebc5k5kfjs1sc9l22l.apps.googleusercontent.com</string>
+    <string name="android_gcp_client_id">42977187359-61plffl6vi1cblnltvg9vmde6gh07re0.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="db_url">https://remind-me-eb683-default-rtdb.firebaseio.com/</string>
+    <string name="task_name_prompt_string">Name:</string>
+    <string name="when_is_it_due">When is it due?</string>
+    <string name="tasks">Tasks</string>
+    <string name="allies">Allies</string>
+    <string name="add_ally">Add Ally</string>
+    <string name="view_allies">View Allies</string>
+    <string name="remind_ally">Remind Ally</string>
+    <string name="add_task">Add Task</string>
+    <string name="view_tasks">View Tasks</string>
+</resources>
