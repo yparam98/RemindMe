@@ -37,6 +37,11 @@ public class DatabaseHelper {
                 .update("tasks", FieldValue.arrayUnion(incoming_task));
     }
 
+    public void addAlly(String incoming_user_id, String incoming_ally_id) {
+        Ally ally = new Ally(incoming_user_id, incoming_ally_id);
+        database.collection("allies").document(ally.ally_record_id).set(ally);
+    }
+
     public void getUser(String incoming_uid, ViewsCallback viewsCallback) {
         this.database.collection("users")
                 .whereEqualTo("uid", incoming_uid)
@@ -76,5 +81,25 @@ public class DatabaseHelper {
 
                     }
                 });
+    }
+
+    public void getAllies(String incoming_user_id, AllyCallback allyCallback) {
+        this.database.collection("allies")
+                .whereEqualTo("user_id", incoming_user_id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            try {
+                                allyCallback.getAllyRecord(true, task.getResult().toObjects(Ally.class).get(0));
+                            } catch (Exception exception) {
+                                Log.d("yathavan", "Error getting Ally: " + exception.getMessage());
+                                allyCallback.getAllyRecord(false, null);
+                            }
+                        }
+                    }
+                });
+
     }
 }

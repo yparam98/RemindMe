@@ -26,6 +26,7 @@ public class TaskBuilder extends DialogFragment {
     private TextInputEditText dueDatePicker;
     private Button ok_button;
     private User currentUser;
+    private String due_date_epoch;
 
    public TaskBuilder() { }
 
@@ -68,6 +69,7 @@ public class TaskBuilder extends DialogFragment {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(selection);
                         dueDatePicker.setText(calendar.getTime().toString());
+                        due_date_epoch = Long.toString(selection/1000L);
                     }
                 });
             }
@@ -78,7 +80,7 @@ public class TaskBuilder extends DialogFragment {
             public void onClick(View view) {
                 DatabaseHelper databaseHelper = new DatabaseHelper();
 //                String incoming_name, String incoming_desc, String incoming_created_date, String incoming_due_date, String incoming_uid
-                Task task = new Task(taskNameInput.getText().toString(), dueDatePicker.getText().toString());
+                Task task = new Task(taskNameInput.getText().toString(), due_date_epoch);
                 databaseHelper.addTask(task, currentUser.uid);
             }
         });

@@ -14,9 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+
+interface AllyCallback {
+    void getAllyRecord(boolean isExist, Ally ally);
+}
 
 public class AddAlly extends DialogFragment {
     User current_user;
@@ -43,6 +56,7 @@ public class AddAlly extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ShapeableImageView user_qr_img = view.findViewById(R.id.user_qr_code);
+
         try {
             InputStream inputStream = (InputStream) new URL("https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + current_user.uid + "&choe=UTF-8").getContent();
             user_qr_img.setImageDrawable(Drawable.createFromStream(inputStream, current_user.display_name + " qr code"));

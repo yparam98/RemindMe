@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,14 +16,18 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.grpc.HandlerRegistry;
 
 public class TaskListView extends Fragment {
     private TaskList taskList;
     private User currentUser;
     private ListView taskListView;
-    private ArrayAdapter<String> taskArrayAdapter;
+    private ArrayAdapter taskArrayAdapter;
 
     public TaskListView() {
         // Required empty public constructor
@@ -54,11 +59,29 @@ public class TaskListView extends Fragment {
             @Override
             public void getTaskList(boolean isValid, List<Task> tasks) {
                 if (isValid) {
-                    taskArrayAdapter = new ArrayAdapter<>(
-                            getContext(),
-                            android.R.layout.simple_list_item_1,
-                            tasks.stream().map(Task::getName).collect(Collectors.toList())
-                    );
+                    for (int i = 0; i < tasks.size(); i++) {
+                        Log.d("yathavan", tasks.get(i).toString());
+                    }
+
+                    taskArrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_2, android.R.id.text1, tasks) {
+                        @NonNull
+                        @Override
+                        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                            View view1 = super.getView(position, convertView, parent);
+
+                            TextView text1 = (TextView) view1.findViewById(android.R.id.text1);
+                            TextView text2 = (TextView) view1.findViewById(android.R.id.text2);
+
+                            text1.setText(tasks.get(position).getName());
+
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+                            Date date = new Date(Long.parseLong(tasks.get(position).getDue_date())*1000L);
+                            text2.setText(simpleDateFormat.format(date));
+
+                            return view1;
+                        }
+                    };
+
                     taskListView.setAdapter(taskArrayAdapter);
                 }
             }
