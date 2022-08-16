@@ -15,6 +15,14 @@ public class Task {
         this.due_date = incoming_due_date;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDue_date() {
+        return due_date;
+    }
+
     @Override
     public String toString() {
         return "Task{" +

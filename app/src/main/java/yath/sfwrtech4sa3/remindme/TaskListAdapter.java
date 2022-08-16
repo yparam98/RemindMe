@@ -21,11 +21,11 @@ public class TaskListAdapter extends AppCompatActivity {
     public TaskListAdapter(TaskList taskList) {
         this.taskArrayAdapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_list_item_1,
+                android.R.layout.simple_list_item_2,
                 taskList.tasks
         );
 
-//        this.taskListView = (ListView) findViewById(R.id.tasks_list);
-//        this.taskListView.setAdapter(this.taskArrayAdapter);
+        this.taskListView = (ListView) findViewById(R.id.tasks_list_view);
+        this.taskListView.setAdapter(this.taskArrayAdapter);
     }
 }

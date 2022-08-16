@@ -48,28 +48,28 @@ public class NavigationBar extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.navigationBarView = view.findViewById(R.id.app_navigation_bar);
 
-        this.navigationBarView.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+        this.navigationBarView = view.findViewById(R.id.app_navigation_bar);
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        this.navigationBarView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
 
                 switch (item.getItemId()) {
                     case R.id.view_tasks_menu_item:
-                        Log.d("yathavan", "view tasks");
                         fragment = new TaskListView(current_user);
                         break;
                     case R.id.add_task_menu_item:
-                        Log.d("yathavan", "add task");
                         fragment = new TaskBuilder(current_user);
                         break;
                     case R.id.view_ally_menu_item:
                         fragment = new ViewAllies();
                         break;
                     case R.id.add_ally_menu_item:
-                        fragment = new AddAlly();
+                        fragment = new AddAlly(current_user);
                         break;
                     case R.id.remind_ally_menu_item:
                         fragment = new TaskListView(current_user);
@@ -78,9 +78,9 @@ public class NavigationBar extends Fragment {
                         fragment = new TaskListView(current_user);
                 }
 
-                FragmentManager fragmentManager = getParentFragmentManager();
                 Log.d("yathavan", fragmentManager.getFragments().toString());
                 fragmentManager.beginTransaction().replace(R.id.homescreen_transaction_frame, fragment).commit();
+                return true;
             }
         });
 

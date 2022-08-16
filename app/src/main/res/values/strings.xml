@@ -16,4 +16,5 @@
     <string name="remind_ally">Remind Ally</string>
     <string name="add_task">Add Task</string>
     <string name="view_tasks">View Tasks</string>
+    <string name="enter_ally_uid">Enter Ally\'s UID:</string>
 </resources>
