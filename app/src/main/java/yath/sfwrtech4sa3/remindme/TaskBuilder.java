@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,21 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TaskBuilder extends DialogFragment {
 
-    private TextInputEditText name;
+    private TextInputEditText taskNameInput;
     private TextInputEditText dueDatePicker;
     private Button ok_button;
+    private User currentUser;
 
-   public TaskBuilder() {
-        // Required empty public constructor
-    }
+   public TaskBuilder() { }
+
+    public TaskBuilder(User user) {
+       this.currentUser = user;
+       Log.d("yathavan", "user reached taskbuilder");
+   }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +49,7 @@ public class TaskBuilder extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.name = view.findViewById(R.id.task_name_input);
+        this.taskNameInput = view.findViewById(R.id.task_name_input);
         this.dueDatePicker = view.findViewById(R.id.task_due_date_picker_text);
 
         this.ok_button = view.findViewById(R.id.task_ok_button);
@@ -61,7 +67,7 @@ public class TaskBuilder extends DialogFragment {
                     public void onPositiveButtonClick(Long selection) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(selection);
-                        dueDatePicker.setText(calendar.get(Calendar.MONDAY));
+                        dueDatePicker.setText(calendar.getTime().toString());
                     }
                 });
             }
@@ -70,7 +76,10 @@ public class TaskBuilder extends DialogFragment {
         this.ok_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                DatabaseHelper databaseHelper = new DatabaseHelper();
+//                String incoming_name, String incoming_desc, String incoming_created_date, String incoming_due_date, String incoming_uid
+                Task task = new Task(taskNameInput.getText().toString(), dueDatePicker.getText().toString());
+                databaseHelper.addTask(task, currentUser.uid);
             }
         });
 

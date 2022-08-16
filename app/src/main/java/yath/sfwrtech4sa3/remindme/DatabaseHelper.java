@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.security.cert.Extension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,16 +28,6 @@ public class DatabaseHelper {
     DatabaseHelper() { }
 
     public void addAccount(User incoming_user) {
-//        Map<String, Object> user = new HashMap<>();
-//        user.put("display_name", incoming_user.display_name);
-//        user.put("uid", incoming_user.uid);
-//        user.put("profile_pic_uri", incoming_user.profile_pic_uri);
-//        user.put("email", incoming_user.email);
-
-        Map<String, Object> taskList = new HashMap<>();
-        taskList.put("user_id", incoming_user.uid);
-        taskList.put("tasks", new ArrayList<yath.sfwrtech4sa3.remindme.Task>());
-
         database.collection("users").document(incoming_user.uid).set(incoming_user);
         database.collection("taskLists").document("t-"+incoming_user.uid).set(new TaskList(incoming_user.uid));
     }
@@ -62,6 +53,27 @@ public class DatabaseHelper {
                         } else {
                             viewsCallback.isUserExist(false, null);
                         }
+                    }
+                });
+    }
+
+    public void getTasks(String incoming_uid, TaskListCallback taskListCallback) {
+        this.database.collection("taskLists")
+                .whereEqualTo("userID", incoming_uid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            try {
+                                taskListCallback.getTaskList(true, task.getResult().toObjects(TaskList.class).get(0).tasks);
+                            } catch (Exception exception) {
+                                Log.d("yathavan", "error getting tasklist: " + exception.getMessage());
+                            }
+                        } else {
+                            taskListCallback.getTaskList(false, null);
+                        }
+
                     }
                 });
     }

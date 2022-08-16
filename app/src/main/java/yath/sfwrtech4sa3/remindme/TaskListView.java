@@ -15,32 +15,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-interface TaskListCallback {
-    void getTaskList(boolean isValid, TaskList taskList);
-}
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskListView extends Fragment {
-    private String uid = "";
     private TaskList taskList;
+    private User currentUser;
 
     public TaskListView() {
         // Required empty public constructor
     }
 
-    public TaskListView(String uid) {
-        this.uid = uid;
-        TaskList taskList = new TaskList(uid);
-//        DatabaseHelper databaseHelper = new DatabaseHelper();
-//        databaseHelper.getTaskList(uid, new TaskListCallback() {
-//            @Override
-//            public void getTaskList(boolean isValid, TaskList taskList) {
-//                if (isValid) {
-//                    TaskListAdapter taskListAdapter = new TaskListAdapter(taskList);
-//                }
-//            }
-//        });
+    public TaskListView(User user) {
+        this.currentUser = user;
     }
 
     @Override
@@ -56,17 +46,28 @@ public class TaskListView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        FloatingActionButton floatingActionButton = getView().findViewById(R.id.add_task);
-
-        Intent taskBuilderIntent = new Intent(getContext(), TaskBuilder.class);
-        taskBuilderIntent.putExtra("UID", this.uid);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        DatabaseHelper databaseHelper = new DatabaseHelper();
+        databaseHelper.getTasks(this.currentUser.uid, new TaskListCallback() {
             @Override
-            public void onClick(View view) {
-                startActivity(taskBuilderIntent);
+            public void getTaskList(boolean isValid, List<Task> tasks) {
+                if (isValid) {
+                    for (int i = 0; i < tasks.size(); i++) {
+                        Log.d("yathavan", tasks.get(i).toString());
+                    }
+                }
             }
         });
+
+//        ExtendedFloatingActionButton add_task_button = getView().findViewById(R.id.add_task_button);
+//
+//        Intent taskBuilderIntent = new Intent(getContext(), TaskBuilder.class);
+//        taskBuilderIntent.putExtra("UID", this.uid);
+//
+//        add_task_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(taskBuilderIntent);
+//            }
+//        });
     }
 }

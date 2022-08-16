@@ -9,6 +9,8 @@ public class TaskList {
     public String userID;
     public List<Task> tasks;
 
+    public TaskList() {}
+
     public TaskList(String incoming_userID) {
         this.taskListID = "t-"+incoming_userID;
         this.userID = incoming_userID;

@@ -1,5 +1,6 @@
 package yath.sfwrtech4sa3.remindme;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,13 +31,6 @@ public class HomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
         this.avatar_img_view = findViewById(R.id.home_avatar_img);
 
-        NavigationBar navigationBar = new NavigationBar();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.drawer_transaction_frame, navigationBar);
-        fragmentTransaction.commit();
-
-
         databaseHelper.getUser(getIntent().getStringExtra("UID"), new ViewsCallback() {
             @Override
             public void isUserExist(boolean doesExist, User user) {
@@ -44,6 +38,7 @@ public class HomeScreen extends AppCompatActivity {
                     try {
                         InputStream inputStream = (InputStream) new URL(user.profile_pic_uri).getContent();
                         avatar_img_view.setImageDrawable(Drawable.createFromStream(inputStream, user.display_name + " profile picture"));
+                        getSupportFragmentManager().beginTransaction().replace(R.id.drawer_transaction_frame, new NavigationBar(user)).commit();
                     } catch (Exception exception) {
                         Log.d("yathavan", "Couldn't set avatar image: " + exception.getMessage());
                     }

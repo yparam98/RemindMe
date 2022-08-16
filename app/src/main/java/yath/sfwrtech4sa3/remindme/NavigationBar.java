@@ -1,6 +1,7 @@
 package yath.sfwrtech4sa3.remindme;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,13 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.List;
+
+interface TaskListCallback {
+    void getTaskList(boolean isValid, List<Task> tasks);
+}
 
 public class NavigationBar extends Fragment {
     private NavigationBarView navigationBarView;
+    private User current_user;
 
-    public NavigationBar() {
-        // Required empty public constructor
+    public NavigationBar() { }
+
+    public NavigationBar(User user) {
+        this.current_user = user;
     }
 
     @Override
@@ -48,11 +59,11 @@ public class NavigationBar extends Fragment {
                 switch (item.getItemId()) {
                     case R.id.view_tasks_menu_item:
                         Log.d("yathavan", "view tasks");
-                        fragment = new TaskListView();
+                        fragment = new TaskListView(current_user);
                         break;
                     case R.id.add_task_menu_item:
                         Log.d("yathavan", "add task");
-                        fragment = new TaskBuilder();
+                        fragment = new TaskBuilder(current_user);
                         break;
                     case R.id.view_ally_menu_item:
                         fragment = new ViewAllies();
@@ -61,10 +72,10 @@ public class NavigationBar extends Fragment {
                         fragment = new AddAlly();
                         break;
                     case R.id.remind_ally_menu_item:
-                        fragment = new TaskListView();
+                        fragment = new TaskListView(current_user);
                         break;
                     default:
-                        fragment = new TaskListView();
+                        fragment = new TaskListView(current_user);
                 }
 
                 FragmentManager fragmentManager = getParentFragmentManager();
