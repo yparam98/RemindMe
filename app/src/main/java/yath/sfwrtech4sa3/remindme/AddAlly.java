@@ -34,7 +34,7 @@ public class AddAlly extends DialogFragment {
     private User current_user;
     private ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture;
     private PreviewView previewView;
-    private Lifecycle lifecycle = getLifecycle();
+//    private Lifecycle lifecycle = getLifecycle();
 
     public AddAlly() { }
 
@@ -86,6 +86,6 @@ public class AddAlly extends DialogFragment {
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
         preview.setSurfaceProvider(this.previewView.getSurfaceProvider());
-        Camera camera = incoming_processCameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
+        Camera camera = incoming_processCameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
     }
 }
