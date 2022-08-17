@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="yath.sfwrtech4sa3.remindme">
 
+    <uses-sdk tools:overrideLibrary="androidx.camera.camera2, androidx.camera.core, androidx.camera.view, androidx.camera.lifecycle" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,7 +19,8 @@
         tools:targetApi="31">
         <activity
             android:name=".TaskBuilder"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".TaskListAdapter"
             android:exported="false" />

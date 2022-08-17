@@ -1,12 +1,22 @@
 package yath.sfwrtech4sa3.remindme;
 
+import android.Manifest;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.RequestBody;
@@ -26,13 +37,18 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
 interface AllyCallback {
     void getAllyRecord(boolean isExist, Ally ally);
 }
 
 public class AddAlly extends DialogFragment {
-    User current_user;
+    private User current_user;
+    private ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture;
+    private PreviewView previewView;
+    private Lifecycle lifecycle = getLifecycle();
 
     public AddAlly() { }
 
@@ -56,6 +72,7 @@ public class AddAlly extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ShapeableImageView user_qr_img = view.findViewById(R.id.user_qr_code);
+        this.previewView = view.findViewById(R.id.qr_camera_preview_pane);
 
         try {
             InputStream inputStream = (InputStream) new URL("https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + current_user.uid + "&choe=UTF-8").getContent();
@@ -63,5 +80,26 @@ public class AddAlly extends DialogFragment {
         } catch (Exception exception) {
             Log.d("yathavan", "error creating qr code");
         }
+
+//        getActivity().requestPermissions(new String[] {Manifest.permission.CAMERA}, 73);
+        this.cameraProviderListenableFuture = ProcessCameraProvider.getInstance(getContext());
+
+        this.cameraProviderListenableFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider processCameraProvider = cameraProviderListenableFuture.get();
+                bindPreview(processCameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }, ContextCompat.getMainExecutor(this.getContext()));
+    }
+
+    private void bindPreview(@NonNull ProcessCameraProvider incoming_processCameraProvider) {
+        Preview preview = new Preview.Builder().build();
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
+        preview.setSurfaceProvider(this.previewView.getSurfaceProvider());
+        Camera camera = incoming_processCameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview);
     }
 }
