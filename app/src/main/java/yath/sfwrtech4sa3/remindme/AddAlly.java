@@ -18,7 +18,10 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.InputStream;
@@ -33,14 +36,13 @@ interface AllyCallback {
 
 public class AddAlly extends DialogFragment {
     private User current_user;
-    private ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture;
-    private PreviewView previewView;
-//    private Lifecycle lifecycle = getLifecycle();
+    private DatabaseHelper databaseHelper;
 
     public AddAlly() { }
 
     public AddAlly(User user) {
         this.current_user = user;
+        this.databaseHelper = new DatabaseHelper();
     }
 
     @Override
@@ -58,38 +60,17 @@ public class AddAlly extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ShapeableImageView user_qr_img = view.findViewById(R.id.user_qr_code);
-        this.previewView = view.findViewById(R.id.qr_camera_preview_pane);
+        TextInputEditText ally_uid_input = view.findViewById(R.id.ally_add_text_input);
+        MaterialTextView current_uid_text_view = view.findViewById(R.id.uid_output);
+        MaterialButton uid_ok_button = view.findViewById(R.id.ally_add_ok_button);
 
-        try {
-            InputStream inputStream = (InputStream) new URL("https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + current_user.uid + "&choe=UTF-8").getContent();
-            user_qr_img.setImageDrawable(Drawable.createFromStream(inputStream, current_user.display_name + " qr code"));
-        } catch (Exception exception) {
-            Log.d("yathavan", "error creating qr code");
-        }
+        current_uid_text_view.setText(current_user.uid);
 
-        this.cameraProviderListenableFuture = ProcessCameraProvider.getInstance(getContext());
-
-        this.cameraProviderListenableFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider processCameraProvider = cameraProviderListenableFuture.get();
-                Preview preview = new Preview.Builder().build();
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-                preview.setSurfaceProvider(this.previewView.getSurfaceProvider());
-                Camera camera = processCameraProvider.bindToLifecycle(this, cameraSelector, preview);
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, ContextCompat.getMainExecutor(this.getContext()));
-
-        boolean needUpdateGraphicOverlayImageSourceInfo = true;
-        AtomicBoolean processingBarcode = new AtomicBoolean(false);
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this.getContext()), imageProxy -> {
-            if (needUpdateGraphicOverlayImageSourceInfo) {
-
+        uid_ok_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseHelper.addAlly(ally_uid_input.getText().toString(), current_user.uid);
+                ally_uid_input.setText("");
             }
         });
     }

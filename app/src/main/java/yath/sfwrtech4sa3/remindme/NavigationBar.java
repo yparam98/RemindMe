@@ -65,11 +65,11 @@ public class NavigationBar extends Fragment {
                     case R.id.add_task_menu_item:
                         fragment = new TaskBuilder(current_user);
                         break;
-                    case R.id.view_ally_menu_item:
-                        fragment = new ViewAllies();
-                        break;
                     case R.id.add_ally_menu_item:
                         fragment = new AddAlly(current_user);
+                        break;
+                    case R.id.view_ally_menu_item:
+                        fragment = new ViewAllies();
                         break;
                     case R.id.remind_ally_menu_item:
                         fragment = new TaskListView(current_user);
