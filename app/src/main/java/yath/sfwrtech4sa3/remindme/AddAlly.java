@@ -11,13 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -25,6 +24,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 interface AllyCallback {
     void getAllyRecord(boolean isExist, Ally ally);
@@ -67,25 +68,29 @@ public class AddAlly extends DialogFragment {
             Log.d("yathavan", "error creating qr code");
         }
 
-//        getActivity().requestPermissions(new String[] {Manifest.permission.CAMERA}, 73);
         this.cameraProviderListenableFuture = ProcessCameraProvider.getInstance(getContext());
 
         this.cameraProviderListenableFuture.addListener(() -> {
             try {
                 ProcessCameraProvider processCameraProvider = cameraProviderListenableFuture.get();
-                bindPreview(processCameraProvider);
+                Preview preview = new Preview.Builder().build();
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
+                preview.setSurfaceProvider(this.previewView.getSurfaceProvider());
+                Camera camera = processCameraProvider.bindToLifecycle(this, cameraSelector, preview);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this.getContext()));
-    }
 
-    private void bindPreview(@NonNull ProcessCameraProvider incoming_processCameraProvider) {
-        Preview preview = new Preview.Builder().build();
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-        preview.setSurfaceProvider(this.previewView.getSurfaceProvider());
-        Camera camera = incoming_processCameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
+        boolean needUpdateGraphicOverlayImageSourceInfo = true;
+        AtomicBoolean processingBarcode = new AtomicBoolean(false);
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().build();
+        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this.getContext()), imageProxy -> {
+            if (needUpdateGraphicOverlayImageSourceInfo) {
+
+            }
+        });
     }
 }

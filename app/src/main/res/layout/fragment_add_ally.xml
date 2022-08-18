@@ -28,18 +28,24 @@
 <!--        android:textSize="36sp"-->
 <!--        android:layout_margin="18dp"/>-->
 
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="@string/this_is_your_uid"/>
+
     <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_margin="24dp"
         android:id="@+id/user_qr_code" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/ally_add_ok_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OK"
-        android:backgroundTint="@android:color/holo_green_dark"
-        android:layout_marginTop="24dp"/>
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/ally_add_ok_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="OK"-->
+<!--        android:backgroundTint="@android:color/holo_green_dark"-->
+<!--        android:layout_marginTop="24dp"/>-->
 
 </LinearLayout>
