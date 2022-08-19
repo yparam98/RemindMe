@@ -22,6 +22,18 @@ public class User {
         this.email = incoming_email;
     }
 
+    public String getUid() {
+        return this.uid;
+    }
+
+    public String getDisplay_name() {
+        return this.display_name;
+    }
+
+    public String getProfile_pic_uri() {
+        return this.profile_pic_uri;
+    }
+
     @NonNull
     @Override
     public String toString() {
