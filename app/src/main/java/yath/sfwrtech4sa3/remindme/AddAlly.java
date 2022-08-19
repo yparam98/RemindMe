@@ -26,12 +26,13 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 interface AllyCallback {
-    void getAllyRecord(boolean isExist, Ally ally);
+    void getAllyRecord(boolean isExist, List<Ally> allies);
 }
 
 public class AddAlly extends DialogFragment {

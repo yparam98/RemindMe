@@ -5,10 +5,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewAllies extends Fragment {
 
@@ -23,7 +29,46 @@ public class ViewAllies extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_view_allies, container, false);
+        RecyclerView allyViewRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_view_allies, container, false);
+        String current_user_uid = getArguments().getString("UID");
+        final DatabaseHelper databaseHelper = new DatabaseHelper();
+
+        List<String> display_names = new ArrayList<>();
+        List<String> profile_picture_uris = new ArrayList<>();
+
+        databaseHelper.getAllies(current_user_uid, new AllyCallback() {
+            @Override
+            public void getAllyRecord(boolean isExist, List<Ally> allies) {
+                if (isExist) {
+                    for (Ally ally : allies) {
+                        databaseHelper.getUser(ally.ally_id, new ViewsCallback() {
+                            @Override
+                            public void isUserExist(boolean doesExist, User user) {
+                                if (doesExist) {
+                                    display_names.add(user.getDisplay_name());
+                                    profile_picture_uris.add(user.getProfile_pic_uri());
+                                }
+                            }
+                        });
+                    }
+
+                    ViewAlliesAdapter viewAlliesAdapter = new ViewAlliesAdapter(display_names.toArray(new String[0]), profile_picture_uris.toArray(new String[0]));
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
+                    allyViewRecycler.setAdapter(viewAlliesAdapter);
+                    allyViewRecycler.setLayoutManager(gridLayoutManager);
+                }
+            }
+        });
+
+        // debugging clause to ensure data received
+        // refactor better way to do this...
+        try {
+            wait(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return allyViewRecycler;
     }
 
     @Override

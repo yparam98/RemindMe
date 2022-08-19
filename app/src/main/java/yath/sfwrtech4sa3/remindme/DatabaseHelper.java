@@ -92,7 +92,7 @@ public class DatabaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             try {
-                                allyCallback.getAllyRecord(true, task.getResult().toObjects(Ally.class).get(0));
+                                allyCallback.getAllyRecord(true, task.getResult().toObjects(Ally.class));
                             } catch (Exception exception) {
                                 Log.d("yathavan", "Error getting Ally: " + exception.getMessage());
                                 allyCallback.getAllyRecord(false, null);
