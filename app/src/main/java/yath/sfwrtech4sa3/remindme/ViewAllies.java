@@ -33,9 +33,17 @@ public class ViewAllies extends Fragment {
         String current_user_uid = getArguments().getString("UID");
         final DatabaseHelper databaseHelper = new DatabaseHelper();
 
+        List<String> uids = new ArrayList<>();
         List<String> display_names = new ArrayList<>();
         List<String> profile_picture_uris = new ArrayList<>();
 
+        uids.add("RYUxxFpcntSkg0QohbTxs6f4oJt1");
+        display_names.add("Yathavan Parameshwaran");
+        profile_picture_uris.add("https://lh3.googleusercontent.com/a-/AFdZucqYMQ_D5Ps9wzEyMNz1mLdfR8Xq7yjyxfws-cQpjn4=s96-c");
+
+        // getting allies from DB, figure out how to do it async then reload adapter
+
+        /*
         databaseHelper.getAllies(current_user_uid, new AllyCallback() {
             @Override
             public void getAllyRecord(boolean isExist, List<Ally> allies) {
@@ -59,14 +67,20 @@ public class ViewAllies extends Fragment {
                 }
             }
         });
+        */
 
-        // debugging clause to ensure data received
-        // refactor better way to do this...
-        try {
-            wait(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//         debugging clause to ensure data received
+//         refactor better way to do this...
+//        try {
+//            wait(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        ViewAlliesAdapter viewAlliesAdapter = new ViewAlliesAdapter(uids.toArray(new String[0]), display_names.toArray(new String[0]), profile_picture_uris.toArray(new String[0]));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+        allyViewRecycler.setAdapter(viewAlliesAdapter);
+        allyViewRecycler.setLayoutManager(gridLayoutManager);
 
         return allyViewRecycler;
     }

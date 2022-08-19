@@ -69,7 +69,10 @@ public class NavigationBar extends Fragment {
                         fragment = new AddAlly(current_user);
                         break;
                     case R.id.view_ally_menu_item:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("UID", current_user.getUid());
                         fragment = new ViewAllies();
+                        fragment.setArguments(bundle);
                         break;
                     case R.id.remind_ally_menu_item:
                         fragment = new TaskListView(current_user);

@@ -1,5 +1,10 @@
 package yath.sfwrtech4sa3.remindme;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,20 +14,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.InputStream;
 import java.net.URL;
 
 public class ViewAlliesAdapter extends RecyclerView.Adapter<ViewAlliesAdapter.ViewHolder> {
+    private String[] uids;
     private String[] display_names;
     private String[] profile_picture_uris;
 
     public ViewAlliesAdapter() {}
 
-    public ViewAlliesAdapter(String[] incoming_names, String[] incoming_picture_uris) {
+    public ViewAlliesAdapter(String[] incoming_uids, String[] incoming_names, String[] incoming_picture_uris) {
+        this.uids = incoming_uids;
         this.display_names = incoming_names;
         this.profile_picture_uris = incoming_picture_uris;
     }
@@ -37,7 +48,7 @@ public class ViewAlliesAdapter extends RecyclerView.Adapter<ViewAlliesAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
 
 
@@ -53,6 +64,22 @@ public class ViewAlliesAdapter extends RecyclerView.Adapter<ViewAlliesAdapter.Vi
 
         TextView textView = (TextView) cardView.findViewById(R.id.ally_card_info_text);
         textView.setText(this.display_names[position]);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseHelper databaseHelper = new DatabaseHelper();
+                databaseHelper.getUser(uids[holder.getAdapterPosition()], new ViewsCallback() {
+                    @Override
+                    public void isUserExist(boolean doesExist, User user) {
+                        if (doesExist) {
+                            FragmentManager fragmentManager = ((AppCompatActivity)cardView.getContext()).getSupportFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.homescreen_transaction_frame, new TaskListView(user));
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
