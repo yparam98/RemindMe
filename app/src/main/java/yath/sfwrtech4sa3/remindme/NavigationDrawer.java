@@ -107,7 +107,7 @@
 //                Log.d("yathavan", "error setting profile picture: " + e.getMessage());
 //            }
 //        } else {
-//            Log.d("yathavan", "bitch it's null");
+//            Log.d("yathavan", "it's null");
 //        }
 //    }
 //}
